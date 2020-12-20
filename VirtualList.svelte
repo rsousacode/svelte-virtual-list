@@ -66,6 +66,44 @@
 
 	}
 
+
+	setTimeout(() => {
+		let i = 0
+		let sura = items.findIndex(item => item.sura === 40)
+		_scrollTo3(sura + i)
+		//console.log(`start: ${start}`)
+		//start = sura;
+		//refresh(items, viewport_height, itemHeight)
+		//handle_scroll()
+	}, 4000)
+
+	setTimeout(() => {
+		//console.log(viewport.scrollTop)
+	}, 30000)
+
+	let handle = true
+
+	async function _scrollTo3 (index, opts) {
+		const {scrollTop, scrollHeight} = viewport
+		console.log('welcome to _scrollTo3: (start, index)', start, index)
+		const itemsDelta = index - start
+		const _itemHeight = itemHeight || average_height
+		const distance = itemsDelta * _itemHeight
+		//await viewport.scrollTo(0, scrollTop + distance);
+		console.log('scrollDistance', distance)
+		console.log('##', opts)
+		opts = {
+			left: 0,
+			top: scrollTop + distance,
+			behavior: 'auto',
+			...opts
+		}
+		viewport.scrollTo(opts)
+		handle = false
+
+	}
+
+
 	async function handle_scroll(event) {
 		const { scrollTop } = viewport;
 
@@ -99,12 +137,16 @@
 		}
 
 		end = i;
+		if(handle){
 
-		const remaining = items.length - end;
-		average_height = y / end;
+			const remaining = items.length - end;
+			average_height = y / end;
 
-		while (i < items.length) height_map[i++] = average_height;
-		bottom = remaining * average_height;
+			while (i < items.length) height_map[i++] = average_height;
+			bottom = remaining * average_height;
+		}
+
+
 
 		// prevent jumping if we scrolled up into unknown territory
 		if (start < old_start) {
@@ -129,6 +171,7 @@
 		// TODO if we overestimated the space these
 		// rows would occupy we may need to add some
 		// more. maybe we can just call handle_scroll again?
+		console.log(`y: ${y}; scrollTop: ${scrollTop}; `)
 	}
 
 	// trigger initial refresh
